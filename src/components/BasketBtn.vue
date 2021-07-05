@@ -1,5 +1,5 @@
 <template>
-    <div class="button" :class="{active: Number(getTotalCount) > 0}">
+    <div class="button" :class="{active: Number(getTotalCount) > 0}" @click="setBasketModal({show: true})">
         <div class="center">
             <h2>Ваш заказ</h2>
             <div class="row">
@@ -19,7 +19,9 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+import {mapGetters, mapMutations} from 'vuex';
+import {SET_BASKET_MODAL} from '@/store/types';
+
 const BasketBtn = {
     computed: {
         ...mapGetters([
@@ -35,6 +37,11 @@ const BasketBtn = {
             this.getBasket.chosedProducts.forEach(el => sum += Number(el.el.price) * Number(el.productCount));
             return sum;
         }
+    },
+    methods: {
+        ...mapMutations({
+            setBasketModal: SET_BASKET_MODAL
+        })
     }
 }
 export default BasketBtn;
