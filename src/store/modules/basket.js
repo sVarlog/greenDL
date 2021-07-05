@@ -8,9 +8,6 @@ export default {
         getBasket: state => {
             return state
         },
-        getTotal: state => {
-            return state.length
-        }
     },
     mutations: {
         [SET_BASKET_DATA] : (state, payload) => {

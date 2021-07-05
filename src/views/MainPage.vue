@@ -1,5 +1,5 @@
 <template>
-    <div class="home">
+    <div class="home" :class="{active: getBasket.chosedProducts.length > 0}">
 		<h1>Микрозелень купить</h1>
 		<ul class="cards">
 			<li class="cardItem" v-for="(card, index) in cards" :key="index">
@@ -9,16 +9,16 @@
 				<div class="desc">
 					<h2 class="title">{{card.title}}</h2>
 					<div class="thereIs" :class="{empty: card.thereIs}">{{card.thereIs ? 'Есть в наличии' : 'Нет в наличии'}}</div>
-					<button @click="addToBasket(card)">
-						<span v-if="isInBasket(card) === 0">{{card.price}} {{card.currency}}</span>
+					<button>
+						<span class="noCounter" v-if="isInBasket(card)" @click="setBasketProduct(card, 'plus', index)">{{card.price}} {{getCurrencyFromStore}}</span>
 						<span class="counter" v-else>
-							<div class="minus">
+							<div class="minus" @click="setBasketProduct(card, 'minus', index)">
 								<svg width="11" height="3" viewBox="0 0 11 3" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path d="M6.80952 0.19043H9.70593C10.4175 0.19043 11 0.788097 11 1.49995C11 2.21181 10.4175 2.80948 9.70593 2.80948H6.80952H4.19048H1.29407C0.582476 2.80948 0 2.21181 0 1.49995C0 0.788097 0.582476 0.19043 1.29407 0.19043H4.19048H6.80952Z" fill="#201E1E"/>
 								</svg>									
 							</div>
-							{{isInBasket(card)}}
-							<div class="plus">
+							<input type="number" v-model="cardsCounter[index]" @blur="setBasketProduct(card, 'inputSave', index)">
+							<div class="plus" @click="setBasketProduct(card, 'plus', index)">
 								<svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path d="M9.70593 4.19048H6.80952V1.29407C6.80952 0.582476 6.21186 0 5.5 0C4.78814 0 4.19048 0.582476 4.19048 1.29407V4.19048H1.29407C0.582476 4.19048 0 4.78814 0 5.5C0 6.21186 0.582476 6.80952 1.29407 6.80952H4.19048V9.70593C4.19048 10.4175 4.78814 11 5.5 11C6.21186 11 6.80952 10.4175 6.80952 9.70593V6.80952H9.70593C10.4175 6.80952 11 6.21186 11 5.5C11 4.78814 10.4175 4.19048 9.70593 4.19048Z" fill="#201E1E"/>
 								</svg>									
@@ -38,28 +38,104 @@ import {SET_BASKET_DATA} from '@/store/types.js';
 const MainPage = {
 	data: () => ({
 		cards: [
-			{id: 1, title: 'Мелисса', thereIs: true, price: 199, currency: '₽', imgSrc: '/img/cardImg.jpg'},
-			{id: 2, title: 'Лук Альпийский', thereIs: false, price: 215, currency: '₽', imgSrc: '/img/cardImg.jpg'},
-			{id: 3, title: 'Капуста красная', thereIs: true, price: 99, currency: '₽', imgSrc: '/img/cardImg.jpg'},
-			{id: 4, title: 'Красный Альпийский лук', thereIs: true, price: 140, currency: '₽', imgSrc: '/img/cardImg.jpg'},
-			{id: 5, title: 'Мелисса Свежая', thereIs: true, price: 650, currency: '₽', imgSrc: '/img/cardImg.jpg'},
-			{id: 6, title: 'Морковь', thereIs: false, price: 310, currency: '₽', imgSrc: '/img/cardImg.jpg'},
-		]
+			{id: 1, title: 'Мелисса', thereIs: true, price: 199, imgSrc: '/img/cardImg2.jpg'},
+			{id: 2, title: 'Лук Альпийский', thereIs: false, price: 215, imgSrc: '/img/cardImg2.jpg'},
+			{id: 3, title: 'Капуста красная', thereIs: true, price: 99, imgSrc: '/img/cardImg2.jpg'},
+			{id: 4, title: 'Красный Альпийский лук', thereIs: true, price: 140, imgSrc: '/img/cardImg2.jpg'},
+			{id: 5, title: 'Мелисса Свежая', thereIs: true, price: 650, imgSrc: '/img/cardImg2.jpg'},
+			{id: 6, title: 'Морковь', thereIs: false, price: 310, imgSrc: '/img/cardImg2.jpg'},
+		],
+		cardsCounter: [],
+		canChange: false
 	}),
+	mounted() {
+		this.cards.forEach(() => {
+			this.cardsCounter.push(0);
+		});
+		this.canChange = true;
+	},
 	computed: {
 		...mapGetters([
 			'getBasket'
 		]),
+		getCurrencyFromStore() {
+			return this.$store.state.currency;
+		}
+	},
+	watch: {
+		cardsCounter: {
+			deep: true,
+			handler() {
+				if (this.canChange) {
+					this.cardsCounter.forEach((el, index) => {
+						if (Number(el) > 0) {
+							if (el.toString()[0] === '0') {
+								this.cardsCounter[index] = Number(el.slice(1));
+							} else if (Number(el) > 100) {
+								this.cardsCounter[index] = Number(100);
+							} else {
+								this.cardsCounter[index] = Number(el);
+							}
+						} else {
+							this.cardsCounter[index] = Number(0);
+						}
+					});
+				}
+			}
+		}
 	},
 	methods: {
 		...mapMutations({
 			changeBasket: SET_BASKET_DATA
 		}),
 		isInBasket(card) {
-			return this.getBasket.chosedProducts.filter(el => el.id === card.id).length;
+			return this.getBasket.chosedProducts.filter(el => el.el.id === card.id).length === 0;
 		},
-		addToBasket(item) {
-			this.changeBasket({chosedProducts: this.getBasket.chosedProducts.push(item)})
+		getBasketCount(card) {
+			return this.getBasket.chosedProducts[this.getProductIndex(card)].productCount;
+		},
+		getProductIndex(item) {
+			return this.getBasket.chosedProducts.findIndex(el => el.el.id === item.id)
+		},
+		setBasketProduct(item, type = 'plus', counterIndex) {
+			let productCount = this.getBasket.chosedProducts.filter(el => el.el.id === item.id).length;
+			if (type === 'plus') {
+				if (productCount === 0) {
+					this.changeBasket({chosedProducts: this.getBasket.chosedProducts.push({el: item, productCount: 1})})
+					this.cardsCounter[counterIndex] = 1;
+				} else {
+					let index = this.getProductIndex(item),
+						newProductList = this.getBasket.chosedProducts;
+					newProductList[index].productCount += 1;
+					if (newProductList[index].productCount <= 100) {
+						this.changeBasket({chosedProducts: newProductList});
+						this.cardsCounter[counterIndex] = newProductList[index].productCount;
+						this.$forceUpdate();
+					}
+				}
+			} else if (type === 'minus') {
+				if (this.getBasket.chosedProducts[this.getProductIndex(item)].productCount === 1) {
+					this.changeBasket({chosedProducts: this.getBasket.chosedProducts.splice(this.getProductIndex(item), 1)});
+					this.cardsCounter[counterIndex] = 0;
+				} else {
+					let index = this.getProductIndex(item),
+						newProductList = this.getBasket.chosedProducts;
+					newProductList[index].productCount -= 1;
+					this.changeBasket({chosedProducts: newProductList});
+					this.cardsCounter[counterIndex] = newProductList[index].productCount;
+					this.$forceUpdate();
+				}
+			} else if (type === 'inputSave') {
+				if (Number(this.cardsCounter[counterIndex]) === 0) {
+					this.changeBasket({chosedProducts: this.getBasket.chosedProducts.splice(this.getProductIndex(item), 1)});
+				} else {
+					let index = this.getProductIndex(item),
+						newProductList = this.getBasket.chosedProducts;
+					newProductList[index].productCount = Number(this.cardsCounter[counterIndex]);
+					this.changeBasket({chosedProducts: newProductList});
+					this.$forceUpdate();
+				}
+			}
 		}
 	}
 }
@@ -74,6 +150,10 @@ export default MainPage;
 	background: #F9F9F9;
 	padding-left: 23px;
 	padding-right: 23px;
+	transition: .2s;
+}
+.home.active{
+	margin-bottom: 121px;
 }
 .home h1{
 	font-family: Montserrat;
@@ -151,7 +231,8 @@ export default MainPage;
 	left: 10px;
 	right: 10px;
 }
-.home .cards .cardItem .desc button span{
+.home .cards .cardItem .desc button span,
+.home .cards .cardItem .desc button span.counter input{
 	font-family: Roboto;
 	font-style: normal;
 	font-weight: bold;
@@ -159,10 +240,29 @@ export default MainPage;
 	line-height: 16px;
 	color: #201E1E;
 }
+.home .cards .cardItem .desc button span.noCounter{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+}
 .home .cards .cardItem .desc button span.counter{
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-
+}
+.home .cards .cardItem .desc button span.counter .minus,
+.home .cards .cardItem .desc button span.counter .plus{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.home .cards .cardItem .desc button span.counter input{
+	border: 0;
+	outline: 0;
+	background: transparent;
+	width: 50px;
+	text-align: center;
 }
 </style>

@@ -2,15 +2,18 @@
 	<div id="app">
 		<header-component></header-component>
 		<router-view/>
+		<basket-btn></basket-btn>
 	</div>
 </template>
 
 <script>
 import HeaderComponent from '@/components/Header';
+import BasketBtn from '@/components/BasketBtn';
 
 const App = {
 	components: {
-		HeaderComponent
+		HeaderComponent,
+		BasketBtn
 	}
 };
 export default App;
