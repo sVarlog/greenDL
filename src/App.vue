@@ -3,17 +3,30 @@
 		<header-component></header-component>
 		<router-view/>
 		<basket-btn></basket-btn>
+		<modals></modals>
 	</div>
 </template>
 
 <script>
 import HeaderComponent from '@/components/Header';
 import BasketBtn from '@/components/BasketBtn';
+import Modals from '@/components/Modals';
 
 const App = {
 	components: {
 		HeaderComponent,
-		BasketBtn
+		BasketBtn,
+		Modals
+	},
+	computed: {
+		getActiveModal() {
+			return this.$store.state.modals.activeModal;
+		}
+	},
+	watch: {
+		getActiveModal() {
+			this.getActiveModal ? document.body.classList.add('modalActive') : document.body.classList.remove('modalActive');
+		}
 	}
 };
 export default App;

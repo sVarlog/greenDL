@@ -2,7 +2,7 @@
     <div class="home" :class="{active: getBasket.chosedProducts.length > 0}">
 		<h1>Микрозелень купить</h1>
 		<ul class="cards">
-			<li class="cardItem" v-for="(card, index) in cards" :key="index">
+			<li class="cardItem" v-for="(card, index) in cards" :key="index" @click="showCardDescModal(card, index, $event)">
 				<div class="imgWrap">
 					<img :src="card.imgSrc" alt="">
 				</div>
@@ -10,7 +10,7 @@
 					<h2 class="title">{{card.title}}</h2>
 					<div class="thereIs" :class="{empty: card.thereIs}">{{card.thereIs ? 'Есть в наличии' : 'Нет в наличии'}}</div>
 					<button>
-						<span class="noCounter" v-if="isInBasket(card)" @click="setBasketProduct(card, 'plus', index)">{{card.price}} {{getCurrencyFromStore}}</span>
+						<span class="noCounter" v-if="isInBasket(card)" @click="setBasketProduct(card, 'plus', index)">{{card.price}} {{getCurrencyFromStore()}}</span>
 						<span class="counter" v-else>
 							<div class="minus" @click="setBasketProduct(card, 'minus', index)">
 								<svg width="11" height="3" viewBox="0 0 11 3" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -34,33 +34,30 @@
 <script>
 import {mapMutations, mapGetters} from 'vuex';
 import {SET_BASKET_DATA} from '@/store/types.js';
+import {SET_CARD_DESC_MODAL} from '@/store/types.js';
+import {eventBus} from '@/main.js';
 	
 const MainPage = {
 	data: () => ({
-		cards: [
-			{id: 1, title: 'Мелисса', thereIs: true, price: 199, imgSrc: '/img/cardImg2.jpg'},
-			{id: 2, title: 'Лук Альпийский', thereIs: false, price: 215, imgSrc: '/img/cardImg2.jpg'},
-			{id: 3, title: 'Капуста красная', thereIs: true, price: 99, imgSrc: '/img/cardImg2.jpg'},
-			{id: 4, title: 'Красный Альпийский лук', thereIs: true, price: 140, imgSrc: '/img/cardImg2.jpg'},
-			{id: 5, title: 'Мелисса Свежая', thereIs: true, price: 650, imgSrc: '/img/cardImg2.jpg'},
-			{id: 6, title: 'Морковь', thereIs: false, price: 310, imgSrc: '/img/cardImg2.jpg'},
-		],
+		cards: [],
 		cardsCounter: [],
 		canChange: false
 	}),
+	created() {
+		this.cards = this.getCards;
+	},
 	mounted() {
 		this.cards.forEach(() => {
 			this.cardsCounter.push(0);
 		});
 		this.canChange = true;
+		eventBus.$on('basketChange', ({item, type, index, addNum}) => this.setBasketProduct(item, type, index, addNum));
 	},
 	computed: {
 		...mapGetters([
-			'getBasket'
+			'getBasket',
+			'getCards'
 		]),
-		getCurrencyFromStore() {
-			return this.$store.state.currency;
-		}
 	},
 	watch: {
 		cardsCounter: {
@@ -86,18 +83,26 @@ const MainPage = {
 	},
 	methods: {
 		...mapMutations({
-			changeBasket: SET_BASKET_DATA
+			changeBasket: SET_BASKET_DATA,
+			setCardDescModal: SET_CARD_DESC_MODAL
 		}),
+		showCardDescModal(item, index, ev) {
+			let t = ev.target;
+			if (t.tagName !== 'BUTTON' && t.tagName !== 'INPUT' && t.tagName !== 'path' && t.tagName !== 'SPAN' && t.tagName !== 'svg') {
+				this.setCardDescModal({show: true, data: item, index: index});
+			}
+		},
 		isInBasket(card) {
 			return this.getBasket.chosedProducts.filter(el => el.el.id === card.id).length === 0;
 		},
 		getBasketCount(card) {
-			return this.getBasket.chosedProducts[this.getProductIndex(card)].productCount;
+			let product = this.getBasket.chosedProducts[this.getProductIndex(card)];
+			return product ? product.productCount : 0;
 		},
 		getProductIndex(item) {
 			return this.getBasket.chosedProducts.findIndex(el => el.el.id === item.id)
 		},
-		setBasketProduct(item, type = 'plus', counterIndex) {
+		setBasketProduct(item, type = 'plus', counterIndex, addNum = null) {
 			let productCount = this.getBasket.chosedProducts.filter(el => el.el.id === item.id).length;
 			if (type === 'plus') {
 				if (productCount === 0) {
@@ -110,7 +115,6 @@ const MainPage = {
 					if (newProductList[index].productCount <= 100) {
 						this.changeBasket({chosedProducts: newProductList});
 						this.cardsCounter[counterIndex] = newProductList[index].productCount;
-						this.$forceUpdate();
 					}
 				}
 			} else if (type === 'minus') {
@@ -123,7 +127,6 @@ const MainPage = {
 					newProductList[index].productCount -= 1;
 					this.changeBasket({chosedProducts: newProductList});
 					this.cardsCounter[counterIndex] = newProductList[index].productCount;
-					this.$forceUpdate();
 				}
 			} else if (type === 'inputSave') {
 				if (Number(this.cardsCounter[counterIndex]) === 0) {
@@ -133,9 +136,15 @@ const MainPage = {
 						newProductList = this.getBasket.chosedProducts;
 					newProductList[index].productCount = Number(this.cardsCounter[counterIndex]);
 					this.changeBasket({chosedProducts: newProductList});
-					this.$forceUpdate();
 				}
+			} else if (type === 'addProduct') {
+				this.cardsCounter[counterIndex] = this.cardsCounter[counterIndex] + Number(addNum) > 100 ? 100 : this.cardsCounter[counterIndex] + Number(addNum);
+				let index = this.getProductIndex(item),
+					newProductList = this.getBasket.chosedProducts;
+				newProductList[index].productCount = Number(this.cardsCounter[counterIndex]);
+				this.changeBasket({chosedProducts: newProductList});
 			}
+			this.$forceUpdate();
 		}
 	}
 }
