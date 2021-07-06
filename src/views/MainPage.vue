@@ -90,7 +90,8 @@ const MainPage = {
 		}),
 		showCardDescModal(item, index, ev) {
 			let t = ev.target;
-			if (t.tagName !== 'BUTTON' && t.tagName !== 'INPUT' && t.tagName !== 'path' && t.tagName !== 'SPAN' && t.tagName !== 'svg') {
+			console.log(t);
+			if (!t.classList.contains('minus') && !t.classList.contains('plus') && t.tagName !== 'BUTTON' && t.tagName !== 'INPUT' && t.tagName !== 'path' && t.tagName !== 'SPAN' && t.tagName !== 'svg') {
 				this.setCardDescModal({show: true, data: item, index: index});
 			}
 		},

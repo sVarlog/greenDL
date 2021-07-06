@@ -224,6 +224,7 @@ export default CardDescModal;
     bottom: 0;
     z-index: 2;
     cursor: pointer;
+    left: calc(50% - 15.5px);
 }
 .modal .wrap .content .bottomPart{
     border-top: 2px solid rgba(0, 0, 0, 0.03);
