@@ -48,6 +48,7 @@ const Modals = {
                 heightHide = (this.content.offsetHeight / 100) * 25;
             if (!end) {
                 if (move - startY < 0) {
+                    eventBus.$emit('showDesc');
                     this.touchStatus = false;
                 } else {
                     this.modalWrap.style.background = `rgba(0,0,0,${(this.defaultWrapBg - (this.defaultWrapBg / 100) * (percent / onePercent)).toFixed(2)})`;

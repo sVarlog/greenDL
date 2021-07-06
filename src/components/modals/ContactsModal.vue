@@ -2,7 +2,7 @@
     <div class="modal contactsModal" @click.self="closeModal" :class="{active: modalShow}" :style="{transition: convertTimeCss()}">
         <div class="wrap" :style="{transition: convertTimeCss()}">
             <h2>Контакты</h2>
-            <a href="telto: +79859329592">+7 (985) 923 95 92</a>
+            <a href="tel: +79168196021">+7 (916) 819 60 21</a>
             <span>ЭСПРО, 143072 МО, Г.ОДИНЦОВО, П.ВНИИССОК, УЛ.СЕЛЕКЦИОННАЯ, Д.14, ЭТ.1, ПОМ.1</span>
         </div>
     </div>

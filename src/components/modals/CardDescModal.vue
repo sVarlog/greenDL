@@ -8,7 +8,22 @@
                         <path d="M6.64999 5.00031L9.74362 1.90668C10.0854 1.56487 10.0854 1.0107 9.74362 0.669421L9.3312 0.257001C8.98928 -0.0849194 8.43511 -0.0849194 8.09383 0.257001L5.00031 3.35052L1.90668 0.25636C1.56487 -0.0854535 1.0107 -0.0854535 0.669421 0.25636L0.25636 0.66878C-0.0854535 1.0107 -0.0854535 1.56487 0.25636 1.90615L3.35052 5.00031L0.257001 8.09383C-0.0849194 8.43575 -0.0849194 8.98992 0.257001 9.3312L0.669421 9.74362C1.01124 10.0854 1.5654 10.0854 1.90668 9.74362L5.00031 6.64999L8.09383 9.74362C8.43575 10.0854 8.98992 10.0854 9.3312 9.74362L9.74362 9.3312C10.0854 8.98928 10.0854 8.43511 9.74362 8.09383L6.64999 5.00031Z" fill="#1D1D1D" fill-opacity="0.5"/>
                     </svg>                        
                 </div>
-                <div class="desc">{{modalData.desc}}</div>
+                <div class="desc" :class="{showGradient: showDescGradient}">
+                    {{modalData.desc}}
+                    <span class="arrow" @click="showFullHeight" v-if="showDescGradient">
+                        <svg width="31" height="31" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="15.5" cy="15.5" r="15.5" fill="#4BCE2A"/>
+                            <g clip-path="url(#clip0)">
+                                <path d="M15.0725 10.1758L11.1 14.1483C10.9866 14.2617 10.9243 14.4128 10.9243 14.574C10.9243 14.7353 10.9866 14.8864 11.1 14.9998L11.4607 15.3604C11.5739 15.4738 11.7252 15.5362 11.8864 15.5362C12.0476 15.5362 12.2039 15.4738 12.3171 15.3604L14.6397 13.043L14.6397 20.4057C14.6397 20.7377 14.8996 21 15.2316 21L15.7417 21C16.0737 21 16.3598 20.7377 16.3598 20.4057L16.3598 13.0167L18.6954 15.3604C18.8087 15.4737 18.9559 15.5361 19.1171 15.5361C19.2782 15.5361 19.4274 15.4737 19.5407 15.3604L19.9003 14.9997C20.0137 14.8863 20.0755 14.7352 20.0755 14.5739C20.0755 14.4128 20.0129 14.2616 19.8995 14.1482L15.927 10.1757C15.8133 10.0621 15.6614 9.99956 15.5 10C15.3381 9.99965 15.1861 10.0621 15.0725 10.1758Z" fill="white"/>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0">
+                                    <rect width="11" height="11" fill="white" transform="translate(10 21) rotate(-90)"/>
+                                </clipPath>
+                            </defs>
+                        </svg>                            
+                    </span>
+                </div>
                 <div class="bottomPart">
                     <div class="row first">
                         <span class="title">{{modalData.title}}</span>
@@ -52,7 +67,9 @@ const CardDescModal = {
         defaultWrapBg: .6,
         touchStatus: true,
         counter: 1,
-        index: null
+        index: null,
+        descHeight: null,
+        showDescGradient: false
     }),
     computed: {
         ...mapGetters([
@@ -65,22 +82,24 @@ const CardDescModal = {
     },
     mounted() {
         this.touch = this.$props.touchFN;
+        eventBus.$on('showDesc', () => this.showFullHeight());
         eventBus.$on('closeModal', () => this.closeModal());
         setTimeout(() => {
             this.modalShow = true;
             this.content = this.$el.querySelector('.wrap');
+            this.checkDeskHeight('.desc');
             this.modalWrap = this.$el;
             if (this.touchStatus) {
                 this.content.addEventListener('touchstart', (e) => {
                     this.startY = e.touches[0].clientY;
                 });
-                this.content.addEventListener('touchmove', (move) => {
+                this.content.querySelector('img').addEventListener('touchmove', (move) => {
                     this.touch({startY: this.startY, move: move.touches[0].clientY});
                 });
-                this.content.addEventListener('touchend', (move) => {
+                this.content.querySelector('img').addEventListener('touchend', (move) => {
                     this.touch({startY: this.startY, move: move.changedTouches[0].clientY, end: true});
                     this.touchStatus = true;
-                })
+                });
             }
             this.$forceUpdate();
         }, 100);
@@ -89,6 +108,23 @@ const CardDescModal = {
         ...mapMutations({
             setModal: SET_CARD_DESC_MODAL,
         }),
+        showFullHeight(){
+            let el = this.$el.querySelector('.desc');
+            this.showDescGradient = false;
+            console.log(this.descHeight);
+            el.style.maxHeight = `${this.descHeight}px`;
+        },
+        checkDeskHeight(selector) {
+            let el = this.$el.querySelector(selector),
+                lineHeight = Number(getComputedStyle(el).lineHeight.toString().replace(/\D/g, '')),
+                rows = 5;
+            this.descHeight = el.offsetHeight;
+            console.log(this.descHeight);
+            if (el.offsetHeight > lineHeight * rows) {
+                el.style.maxHeight = `${lineHeight * rows}px`;
+                this.showDescGradient = true;
+            }
+        },
         setBasketProduct(item, type, index) {
             console.log(this.counter, 'counter');
             eventBus.$emit('basketChange', {item: item, type, index: index, addNum: this.counter});
@@ -167,10 +203,36 @@ export default CardDescModal;
     font-size: 14px;
     line-height: 150%;
     color: #201E1E;
+    transition: .2s;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+.modal .wrap .content .desc.showGradient:after{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 50px;
+    left: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #FFFFFF 100%);
+}
+.modal .wrap .content .desc .arrow{
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    cursor: pointer;
 }
 .modal .wrap .content .bottomPart{
     border-top: 2px solid rgba(0, 0, 0, 0.03);
     padding: 20px 23px;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    background: #fff;
+    height: 135px;
 }
 .modal .wrap .content .bottomPart .row{
     display: flex;

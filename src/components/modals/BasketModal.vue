@@ -345,6 +345,12 @@ export default BasketModal;
     padding-left: 16px;
     padding-top: 18px;
     padding-bottom: 18px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 150%;
+    color: #201E1E;
 }
 .modal .form input::placeholder,
 .modal .form textarea::placeholder{
@@ -355,8 +361,8 @@ export default BasketModal;
     line-height: 150%;
     color: #201E1E;
     opacity: 0.5;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 .modal .form textarea::-webkit-scrollbar {
   display: none;

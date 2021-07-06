@@ -3,7 +3,7 @@ import { SET_BASKET_MODAL, SET_CARD_DESC_MODAL, SET_COMPLETE_MODAL, SET_CONTACTS
 export default {
     state: () => ({
         activeModal: false,
-        modalsTimeShow: 400,
+        modalsTimeShow: 200,
         loading: false,
         cardDescModal: {
             show: false,

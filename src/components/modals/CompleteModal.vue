@@ -57,7 +57,7 @@ const CompleteModal = {
                 transition: ${this.convertTimeCss()};
             `;
             setTimeout(() => {
-                this.setModal({show: false});
+                this.setModal(false);
             }, this.$store.state.modals.modalsTimeShow + 200)
         }
     }
