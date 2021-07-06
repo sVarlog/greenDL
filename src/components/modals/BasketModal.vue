@@ -11,14 +11,14 @@
                     <h2>{{getTotalSum}} {{getCurrencyFromStore()}}</h2>
                     <span>Ваш заказ</span>
                 </div>
-                <div class="delete">
+                <div class="delete" @click="deleteProducts">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M16.5625 2.5H13.125V1.875C13.125 0.839453 12.2855 0 11.25 0H8.75C7.71445 0 6.875 0.839453 6.875 1.875V2.5H3.4375C2.57457 2.5 1.875 3.19957 1.875 4.0625V5.3125C1.875 5.6577 2.1548 5.9375 2.5 5.9375H17.5C17.8452 5.9375 18.125 5.6577 18.125 5.3125V4.0625C18.125 3.19957 17.4254 2.5 16.5625 2.5ZM8.125 1.875C8.125 1.53047 8.40547 1.25 8.75 1.25H11.25C11.5945 1.25 11.875 1.53047 11.875 1.875V2.5H8.125V1.875Z" fill="#1D1D1D"/>
                         <path d="M3.06152 7.1875C2.94999 7.1875 2.86112 7.2807 2.86644 7.39211L3.38206 18.2141C3.42972 19.2156 4.25237 20 5.25472 20H14.7461C15.7485 20 16.5711 19.2156 16.6188 18.2141L17.1344 7.39211C17.1397 7.2807 17.0509 7.1875 16.9393 7.1875H3.06152ZM12.5004 8.75C12.5004 8.40469 12.7801 8.125 13.1254 8.125C13.4707 8.125 13.7504 8.40469 13.7504 8.75V16.875C13.7504 17.2203 13.4707 17.5 13.1254 17.5C12.7801 17.5 12.5004 17.2203 12.5004 16.875V8.75ZM9.37542 8.75C9.37542 8.40469 9.65511 8.125 10.0004 8.125C10.3457 8.125 10.6254 8.40469 10.6254 8.75V16.875C10.6254 17.2203 10.3457 17.5 10.0004 17.5C9.65511 17.5 9.37542 17.2203 9.37542 16.875V8.75ZM6.25042 8.75C6.25042 8.40469 6.53011 8.125 6.87542 8.125C7.22073 8.125 7.50042 8.40469 7.50042 8.75V16.875C7.50042 17.2203 7.22073 17.5 6.87542 17.5C6.53011 17.5 6.25042 17.2203 6.25042 16.875V8.75Z" fill="#1D1D1D"/>
                     </svg>                        
                 </div>
             </div>
-            <ul class="basketItems">
+            <ul class="basketItems" v-if="basketItems">
                 <li class="basketItem" v-for="(item, index) in basketItems" :key="index">
                     <div class="left">
                         <img :src="item.el.imgSrc" alt="item.title">
@@ -28,13 +28,13 @@
                         <span>{{item.el.price}} {{getCurrencyFromStore()}}</span>
                     </div>
                     <div class="rigth">
-                        <div class="minus" @click="item.productCount--">
+                        <div class="minus" @click="changeItemCount(item, index, 'minus')">
                             <svg width="11" height="3" viewBox="0 0 11 3" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.80952 0.19043H9.70593C10.4175 0.19043 11 0.788097 11 1.49995C11 2.21181 10.4175 2.80948 9.70593 2.80948H6.80952H4.19048H1.29407C0.582476 2.80948 0 2.21181 0 1.49995C0 0.788097 0.582476 0.19043 1.29407 0.19043H4.19048H6.80952Z" fill="#201E1E"/>
                             </svg>									
                         </div>                        
                         <span class="count">{{item.productCount}}</span>
-                        <div class="plus" @click="item.productCount++;">
+                        <div class="plus" @click="changeItemCount(item, index, 'plus')">
                             <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M9.70593 4.19048H6.80952V1.29407C6.80952 0.582476 6.21186 0 5.5 0C4.78814 0 4.19048 0.582476 4.19048 1.29407V4.19048H1.29407C0.582476 4.19048 0 4.78814 0 5.5C0 6.21186 0.582476 6.80952 1.29407 6.80952H4.19048V9.70593C4.19048 10.4175 4.78814 11 5.5 11C6.21186 11 6.80952 10.4175 6.80952 9.70593V6.80952H9.70593C10.4175 6.80952 11 6.21186 11 5.5C11 4.78814 10.4175 4.19048 9.70593 4.19048Z" fill="#201E1E"/>
                             </svg>									
@@ -42,6 +42,7 @@
                     </div>
                 </li>
             </ul>
+            <span class="noData" v-else>Нет выбранных товаров</span>
             <div class="form">
                 <h2>Адрес доставки</h2>
                 <input type="text" v-model="formData.street" placeholder="Улица">
@@ -53,7 +54,7 @@
                 <input type="text" v-model="formData.phone" placeholder="Телефон">
                 <textarea v-model="formData.comment" placeholder="Комментарий"></textarea>
             </div>
-            <button class="pay" :disabled="checkBtnShow">
+            <button class="pay" @click="makeOrder" :disabled="checkBtnShow">
                 Оплатить
                 <span>
                     <div class="icon">
@@ -76,10 +77,14 @@
 </template>
 
 <script>
+import {eventBus} from '@/main.js';
 import {mapMutations, mapGetters} from 'vuex';
-import {SET_BASKET_MODAL} from '@/store/types.js';
+import {SET_BASKET_MODAL, SET_BASKET_DATA, SET_LOADING_MODAL, SET_COMPLETE_MODAL, DELETE_BASKET_DATA} from '@/store/types.js';
 
 const BasketModal = {
+    props: {
+        touchFN: {}
+    },
     data: () => ({
         modalShow: false,
         defaultWrapBg: .6,
@@ -121,6 +126,8 @@ const BasketModal = {
         }
     },
     mounted() {
+        this.touch = this.$props.touchFN;
+        eventBus.$on('closeModal', () => this.closeModal());
         setTimeout(() => {
             this.modalShow = true;
             this.content = this.$el.querySelector('.wrap');
@@ -142,40 +149,37 @@ const BasketModal = {
     },
     methods: {
         ...mapMutations({
-            setModal: SET_BASKET_MODAL
+            setModal: SET_BASKET_MODAL,
+            changeBasket: SET_BASKET_DATA,
+            setLoading: SET_LOADING_MODAL,
+            setCompleteModal: SET_COMPLETE_MODAL
         }),
-        touch({startY, move, end}) {
-            let percent = move - startY,
-                onePercent = this.content.offsetHeight / 100,
-                heightHide = (this.content.offsetHeight / 100) * 25;
-            if (!end) {
-                if (move - startY < 0) {
-                    this.touchStatus = false;
-                } else {
-                    this.modalWrap.style.background = `rgba(0,0,0,${(this.defaultWrapBg - (this.defaultWrapBg / 100) * (percent / onePercent)).toFixed(2)})`;
-                    this.content.style.cssText = `
-                        transition: 0s ease-in;
-                        transform: translateY(${percent}px)
-                    `;
+        deleteProducts() {
+            this.$store.commit(DELETE_BASKET_DATA);
+            eventBus.$emit('deleteProducts')
+        },
+        makeOrder() {
+            this.setLoading(true);
+            setTimeout(() => {
+                this.closeModal();
+                setTimeout(() => {
+                    this.setCompleteModal(true);
+                }, this.$store.state.modals.modalsTimeShow);
+                this.setLoading(false);
+            }, 2000)
+        },
+        changeItemCount(item, index, type) {
+            let newProductList = this.basketItems;
+            if (type === 'plus') {
+                if (newProductList[index].productCount < 100) {
+                    newProductList[index].productCount += 1;
                 }
-            } else {
-                if (percent > heightHide) {
-                    this.modalWrap.style.background = 'rgba(0,0,0,0)';
-                    this.content.style.cssText = `
-                        transform: translateY(125%);
-                        transition: ${this.convertTimeCss()};
-                    `;
-                    this.touchStatus = false;
-                    setTimeout(() => {
-                        this.closeModal('close');
-                    }, 100)
-                } else {
-                    this.content.style.cssText = `
-                        transition: ${this.convertTimeCss()};
-                        transform: translateY(0);
-                    `;
+            } else if (type === 'minus') {
+                if (newProductList[index].productCount > 0) {
+                    newProductList[index].productCount -= 1;
                 }
             }
+            this.changeBasket({chosedProducts: newProductList});
         },
         closeModal() {
             this.modalShow = false;
@@ -194,37 +198,6 @@ export default BasketModal;
 </script>
 
 <style scoped>
-.modal{
-    position: fixed;
-    z-index: 100;
-    background: rgba(0,0,0,0);
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-.modal.active{
-    background: rgba(0,0,0,.6);
-}
-.modal .wrap{
-    background: #fff;
-    max-height: 90vh;
-    overflow-y: auto;
-    width: 100%;
-    display: block;
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
-    -webkit-border-top-left-radius: 25px;
-    -webkit-border-top-right-radius: 25px;
-    transform: translateY(125%);
-    padding: 30px 23px 70px 23px;
-}
-.modal.active .wrap{
-    transform: translateY(0);
-}
 .modal .header{
     display: flex;
     width: 100%;
@@ -420,5 +393,19 @@ export default BasketModal;
     background: #38A91B;
     border-radius: 7px;
     -webkit-border-radius: 7px;
+}
+.modal .noData{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 150%;
+    text-align: center;
+    color: #201E1E;
+    opacity: 0.5;
+    margin-top: 45px;
+    margin-bottom: 45px;
+    display: flex;
+    justify-content: center;
 }
 </style>

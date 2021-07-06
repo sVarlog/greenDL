@@ -141,8 +141,13 @@ const MainPage = {
 				this.cardsCounter[counterIndex] = this.cardsCounter[counterIndex] + Number(addNum) > 100 ? 100 : this.cardsCounter[counterIndex] + Number(addNum);
 				let index = this.getProductIndex(item),
 					newProductList = this.getBasket.chosedProducts;
-				newProductList[index].productCount = Number(this.cardsCounter[counterIndex]);
-				this.changeBasket({chosedProducts: newProductList});
+				if (index === -1) {
+					newProductList = [{el: item, productCount: Number(this.cardsCounter[counterIndex])}];
+					this.changeBasket({chosedProducts: this.getBasket.chosedProducts.push({el: item, productCount: addNum})});
+				} else {
+					newProductList[index].productCount = Number(this.cardsCounter[counterIndex]);
+					this.changeBasket({chosedProducts: newProductList});
+				}
 			}
 			this.$forceUpdate();
 		}

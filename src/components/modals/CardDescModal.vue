@@ -42,6 +42,9 @@ import {SET_CARD_DESC_MODAL} from '@/store/types.js';
 import {eventBus} from '@/main.js';
 
 const CardDescModal = {
+    props: {
+        touchFN: {}
+    },
     data: () => ({
         modalShow: false,
         modalData: null,
@@ -61,6 +64,8 @@ const CardDescModal = {
         this.index = Number(this.getCardDescModal.index);
     },
     mounted() {
+        this.touch = this.$props.touchFN;
+        eventBus.$on('closeModal', () => this.closeModal());
         setTimeout(() => {
             this.modalShow = true;
             this.content = this.$el.querySelector('.wrap');
@@ -85,41 +90,10 @@ const CardDescModal = {
             setModal: SET_CARD_DESC_MODAL,
         }),
         setBasketProduct(item, type, index) {
+            console.log(this.counter, 'counter');
             eventBus.$emit('basketChange', {item: item, type, index: index, addNum: this.counter});
+            this.closeModal();
 		},
-        touch({startY, move, end}) {
-            let percent = move - startY,
-                onePercent = this.content.offsetHeight / 100,
-                heightHide = (this.content.offsetHeight / 100) * 25;
-            if (!end) {
-                if (move - startY < 0) {
-                    this.touchStatus = false;
-                } else {
-                    this.modalWrap.style.background = `rgba(0,0,0,${(this.defaultWrapBg - (this.defaultWrapBg / 100) * (percent / onePercent)).toFixed(2)})`;
-                    this.content.style.cssText = `
-                        transition: 0s ease-in;
-                        transform: translateY(${percent}px)
-                    `;
-                }
-            } else {
-                if (percent > heightHide) {
-                    this.modalWrap.style.background = 'rgba(0,0,0,0)';
-                    this.content.style.cssText = `
-                        transform: translateY(125%);
-                        transition: ${this.convertTimeCss()};
-                    `;
-                    this.touchStatus = false;
-                    setTimeout(() => {
-                        this.closeModal('close');
-                    }, 100)
-                } else {
-                    this.content.style.cssText = `
-                        transition: ${this.convertTimeCss()};
-                        transform: translateY(0);
-                    `;
-                }
-            }
-        },
         closeModal() {
             this.modalShow = false;
             this.modalWrap.style.background = 'rgba(0,0,0,0)';
@@ -129,7 +103,7 @@ const CardDescModal = {
             `;
             setTimeout(() => {
                 this.setModal({show: false});
-            }, this.$store.state.modals.modalsTimeShow)
+            }, this.$store.state.modals.modalsTimeShow + 200)
         }
     },
     watch: {
@@ -152,35 +126,8 @@ export default CardDescModal;
 </script>
 
 <style scoped>
-.modal{
-    position: fixed;
-    z-index: 100;
-    background: rgba(0,0,0,0);
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-.modal.active{
-    background: rgba(0,0,0,.6);
-}
 .modal .wrap{
-    background: #fff;
-    max-height: 90vh;
-    overflow-y: auto;
-    width: 100%;
-    display: block;
-    border-top-left-radius: 25px;
-    border-top-right-radius: 25px;
-    -webkit-border-top-left-radius: 25px;
-    -webkit-border-top-right-radius: 25px;
-    transform: translateY(125%);
-}
-.modal.active .wrap{
-    transform: translateY(0);
+    padding: 0;
 }
 .modal .wrap .content{
     width: 100%;

@@ -1,4 +1,4 @@
-import { SET_BASKET_DATA } from "../types";
+import { DELETE_BASKET_DATA, SET_BASKET_DATA } from "../types";
 
 export default {
     state: () => ({
@@ -12,6 +12,9 @@ export default {
     mutations: {
         [SET_BASKET_DATA] : (state, payload) => {
             state = payload;
+        },
+        [DELETE_BASKET_DATA] : (state) => {
+            state.chosedProducts = [];
         }
     }
 };
