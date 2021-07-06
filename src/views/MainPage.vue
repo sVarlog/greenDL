@@ -247,6 +247,7 @@ export default MainPage;
 	bottom: 10px;
 	left: 10px;
 	right: 10px;
+	cursor: pointer;
 }
 .home .cards .cardItem .desc button span,
 .home .cards .cardItem .desc button span.counter input{
@@ -291,9 +292,16 @@ export default MainPage;
 		margin-left: 0;
 		margin-right: 0;
 	}
-	.home .cards .cardItem:nth-child(2n){
+	.home .cards .cardItem{
 		margin-left: 15px;
 		margin-right: 15px;
+	}
+	.home .cards .cardItem:nth-child(1n){
+		margin-left: 0;
+	}
+	.home .cards .cardItem:nth-child(3n){
+		margin-left: 0;
+		margin-right: 0;
 	}
 	.home .cards .cardItem .desc button{
 		max-width: 155px;

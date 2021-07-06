@@ -2,13 +2,13 @@
     <div class="modal basketModal" @click.self="closeModal" :class="{active: modalShow}" :style="{transition: convertTimeCss()}">
         <div class="wrap" :style="{transition: convertTimeCss()}">
             <div class="header">
-                <div class="back">
+                <div class="back" @click="closeModal">
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M0.319675 9.223L7.54238 2.00013C7.74856 1.79396 8.02335 1.68079 8.31636 1.68079C8.60969 1.68079 8.88432 1.79412 9.0905 2.00013L9.74626 2.65606C9.95228 2.86191 10.0658 3.13687 10.0658 3.43004C10.0658 3.72305 9.95228 4.00727 9.74626 4.21312L5.53264 8.43602H18.9195C19.5231 8.43602 20 8.90853 20 9.51227V10.4396C20 11.0433 19.5231 11.5635 18.9195 11.5635H5.48484L9.7461 15.8099C9.95212 16.0161 10.0656 16.2836 10.0656 16.5768C10.0656 16.8696 9.95212 17.141 9.7461 17.347L9.09033 18.0008C8.88416 18.207 8.60952 18.3194 8.31619 18.3194C8.02319 18.3194 7.74839 18.2055 7.54222 17.9994L0.319511 10.7766C0.112846 10.5698 -0.000810623 10.2937 3.8147e-06 10.0002C-0.000646591 9.70576 0.112846 9.4295 0.319675 9.223Z" fill="#1D1D1D"/>
                     </svg>                        
                 </div>
                 <div class="title">
-                    <h2>{{getTotalSum}} {{getCurrencyFromStore()}}</h2>
+                    <h2>{{getSpaceNum(getTotalSum)}} {{getCurrencyFromStore()}}</h2>
                     <span>Ваш заказ</span>
                 </div>
                 <div class="delete" @click="deleteProducts">
@@ -45,7 +45,7 @@
             <span class="noData" v-else>Нет выбранных товаров</span>
             <div class="form">
                 <h2>Адрес доставки</h2>
-                <input type="text" v-model="formData.street" placeholder="Улица">
+                <input type="text" v-model="formData.street" placeholder="Город, Улица">
                 <div class="inputsRow">
                     <input type="text" v-model="formData.flat" placeholder="Кв/офис">
                     <input type="text" v-model="formData.entrance" placeholder="Подъезд">
@@ -69,7 +69,7 @@
                             </defs>
                         </svg>                            
                     </div>
-                    {{getTotalSum}} {{getCurrencyFromStore()}}
+                    {{getSpaceNum(getTotalSum)}} {{getCurrencyFromStore()}}
                 </span>
             </button>
         </div>
@@ -185,7 +185,7 @@ const BasketModal = {
             this.modalShow = false;
             this.modalWrap.style.background = 'rgba(0,0,0,0)';
             this.content.style.cssText = `
-                transform: translateY(125%);
+                transform: translateY(150%);
                 transition: ${this.convertTimeCss()};
             `;
             setTimeout(() => {
@@ -238,7 +238,18 @@ export default BasketModal;
     width: 100%;
     margin-top: 25px;
     max-height: 290px;
-    overflow-y: scroll;
+    overflow-y: auto;
+    margin-bottom: 6px;
+    scrollbar-color: rgba(32, 30, 30, 0.2) transparent;     /* «цвет ползунка» «цвет полосы скроллбара» */
+    scrollbar-width: 10px;  
+}
+.modal .basketItems::-webkit-scrollbar {
+    width: 10px;
+    background-color: transparent;
+}
+.modal .basketItems::-webkit-scrollbar-thumb {
+    background-color: rgba(32, 30, 30, 0.2);
+    border-radius: 10px;
 }
 .modal .basketItems .basketItem{
     display: flex;
@@ -335,6 +346,21 @@ export default BasketModal;
     padding-top: 18px;
     padding-bottom: 18px;
 }
+.modal .form input::placeholder,
+.modal .form textarea::placeholder{
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 150%;
+    color: #201E1E;
+    opacity: 0.5;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.modal .form textarea::-webkit-scrollbar {
+  display: none;
+}
 .modal .form .inputsRow{
     display: flex;
     align-items: center;
@@ -363,6 +389,9 @@ export default BasketModal;
     color: #FFFFFF;
     position: relative;
     transition: .2s;
+    max-width: 345px;
+    margin-left: auto;
+    margin-right: auto;
 }
 .modal button.pay:disabled{
     opacity: .5;
@@ -407,5 +436,23 @@ export default BasketModal;
     margin-bottom: 45px;
     display: flex;
     justify-content: center;
+}
+@media screen and (min-width: 900px) {
+    .modal.basketModal .wrap{
+        padding: 35px 50px;
+    }
+    .modal.basketModal .header .back{
+        display: none;
+    }
+    .modal.basketModal .form h2{
+        font-family: Montserrat;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 22px;
+        line-height: 150%;
+        color: #201E1E;
+        width: 100%;
+        text-align: left;
+    }
 }
 </style>

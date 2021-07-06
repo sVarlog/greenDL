@@ -12,6 +12,9 @@ Vue.use(Vuex);
 
 Vue.mixin({
     methods: {
+        getSpaceNum(num) {
+            return num.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1 ");
+        },
         convertTimeCss() {
             return `${(this.$store.state.modals.modalsTimeShow / 1000) % 1}s`;
         },

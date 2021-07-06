@@ -5,7 +5,7 @@
                 <h2>Ваш заказ</h2>
                 <div class="row">
                     <span class="counter">{{getTotalCount}} шт</span>
-                    <span class="price">{{getTotalSum}} {{$store.state.currency}}</span>
+                    <span class="price">{{getSpaceNum(getTotalSum)}} {{$store.state.currency}}</span>
                 </div>
             </div>
             <div class="rigth">
@@ -50,6 +50,9 @@ export default BasketBtn;
 </script>
 
 <style scoped>
+body.modalActive .btnWrap{
+    width: calc(100% - 47px);
+}
 .btnWrap{
     position: fixed;
     bottom: 37px;
@@ -75,6 +78,7 @@ export default BasketBtn;
     pointer-events: none;
     max-width: 455px;
     position: relative;
+    cursor: pointer;
 }
 .button.active{
     opacity: 1;

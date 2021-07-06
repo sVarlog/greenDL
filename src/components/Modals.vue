@@ -121,7 +121,11 @@ export default Modals;
         max-height: 95vh;
         border-radius: 25px;
         -webkit-border-radius: 25px;
+        -ms-overflow-style: none;
+        overflow: -moz-scrollbars-none;
+        scrollbar-width: none;
     }
+    .modal .wrap::-webkit-scrollbar { width: 0; height: 0; }
     .modal.active .wrap{
         transform: scale(1);
     }

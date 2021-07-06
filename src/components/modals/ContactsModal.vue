@@ -51,7 +51,7 @@ const ContactsModal = {
             this.modalShow = false;
             this.modalWrap.style.background = 'rgba(0,0,0,0)';
             this.content.style.cssText = `
-                transform: translateY(125%);
+                transform: translateY(100vh);
                 transition: ${this.convertTimeCss()};
             `;
             setTimeout(() => {

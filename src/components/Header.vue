@@ -70,14 +70,12 @@ export default Header;
 </script>
 
 <style scoped>
-body.modalActive .headerWrap{
-    right: 8px;
-}
 .headerWrap{
     position: fixed;
     width: 100%;
     display: flex;
     justify-content: center;
+    z-index: 5;
 }
 .header{
     width: 100%;
@@ -176,5 +174,10 @@ body.modalActive .headerWrap{
     margin-left: 17px;
     margin-right: 17px;
     cursor: pointer;
+}
+@media screen and (min-width: 700px) {
+    body.modalActive .headerWrap{
+        right: 8px;
+    }
 }
 </style>
