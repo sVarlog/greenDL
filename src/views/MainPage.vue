@@ -54,6 +54,9 @@ const MainPage = {
 		});
 		this.canChange = true;
 		eventBus.$on('basketChange', ({item, type, index, addNum}) => this.setBasketProduct(item, type, index, addNum));
+		this.$el.querySelector('.home').addEventListener('touchstart', () => {
+			this.$el.focus();
+		});
 	},
 	computed: {
 		...mapGetters([
