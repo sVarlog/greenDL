@@ -1,4 +1,4 @@
-import { SET_BASKET_MODAL, SET_CARD_DESC_MODAL, SET_COMPLETE_MODAL, SET_LOADING_MODAL } from "../types";
+import { SET_BASKET_MODAL, SET_CARD_DESC_MODAL, SET_COMPLETE_MODAL, SET_CONTACTS_MODAL, SET_LOADING_MODAL } from "../types";
 
 export default {
     state: () => ({
@@ -12,7 +12,8 @@ export default {
         basketModal: {
             show: false
         },
-        completeModal: false
+        completeModal: false,
+        contactsModal: false
     }),
     getters: {
         getCardDescModal: state => {
@@ -26,6 +27,9 @@ export default {
         },
         getCompleteModal: state => {
             return state.completeModal
+        },
+        getContactsModal: state => {
+            return state.contactsModal
         }
     },
     mutations: {
@@ -43,6 +47,10 @@ export default {
         [SET_COMPLETE_MODAL] : (state, payload) => {
             state.activeModal = payload;
             state.completeModal = payload;
+        },
+        [SET_CONTACTS_MODAL] : (state, payload) => {
+            state.activeModal = payload;
+            state.contactsModal = payload;
         }
     }
 }

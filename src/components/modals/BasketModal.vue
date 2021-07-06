@@ -18,7 +18,7 @@
                     </svg>                        
                 </div>
             </div>
-            <ul class="basketItems" v-if="basketItems">
+            <ul class="basketItems" v-if="basketItems && basketItems.length > 0">
                 <li class="basketItem" v-for="(item, index) in basketItems" :key="index">
                     <div class="left">
                         <img :src="item.el.imgSrc" alt="item.title">

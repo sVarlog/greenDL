@@ -3,6 +3,7 @@
         <card-desc-modal :touchFN="touch" v-if="getCardDescModal.show"></card-desc-modal>
         <basket-modal :touchFN="touch" v-if="getBasketModal.show"></basket-modal>
         <complete-modal :touchFN="touch" v-if="getCompleteModal"></complete-modal>
+        <contacts-modal :touchFN="touch" v-if="getContactsModal"></contacts-modal>
         <transition name="fade">
             <loading-modal v-if="getLoading"></loading-modal>
         </transition>
@@ -16,6 +17,7 @@ const CardDescModal = () => import('@/components/modals/CardDescModal');
 const BasketModal = () => import('@/components/modals/BasketModal');
 const LoadingModal = () => import('@/components/modals/Loading');
 const CompleteModal = () => import('@/components/modals/CompleteModal');
+const ContactsModal = () => import('@/components/modals/ContactsModal');
 
 const Modals = {
     data: () => ({
@@ -26,14 +28,16 @@ const Modals = {
             'getCardDescModal',
             'getBasketModal',
             'getLoading',
-            'getCompleteModal'
+            'getCompleteModal',
+            'getContactsModal'
         ])
     },
     components: {
         CardDescModal,
         BasketModal,
         LoadingModal,
-        CompleteModal
+        CompleteModal,
+        ContactsModal
     },
     methods: {
         touch({startY, move, end}) {
