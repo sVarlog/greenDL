@@ -107,8 +107,23 @@ export default Modals;
     -webkit-border-top-right-radius: 25px;
     transform: translateY(125%);
     padding: 30px 23px 70px 23px;
+    max-width: 600px;
 }
 .modal.active .wrap{
     transform: translateY(0);
+}
+@media screen and (min-width: 900px) {
+    .modal{
+        align-items: center;
+    }
+    .modal .wrap{
+        transform: scale(0);
+        max-height: 95vh;
+        border-radius: 25px;
+        -webkit-border-radius: 25px;
+    }
+    .modal.active .wrap{
+        transform: scale(1);
+    }
 }
 </style>

@@ -165,6 +165,8 @@ export default MainPage;
 	padding-left: 23px;
 	padding-right: 23px;
 	transition: .2s;
+	max-width: 1200px;
+    margin: auto;
 }
 .home.active{
 	margin-bottom: 121px;
@@ -194,10 +196,11 @@ export default MainPage;
 	border-radius: 18px;
 	-webkit-border-radius: 18px;
 	overflow: hidden;
+	cursor: pointer;
 }
 .home .cards .cardItem .imgWrap img{
 	width: 100%;
-	height: 145px;
+	min-height: 145px;
 	object-fit: cover;
 }
 .home .cards .cardItem .desc{
@@ -278,5 +281,30 @@ export default MainPage;
 	background: transparent;
 	width: 50px;
 	text-align: center;
+}
+@media screen and (min-width: 700px) {
+	.home .cards{
+		justify-content: flex-start;
+	}
+	.home .cards .cardItem{
+		width: calc(33.33% - 10px);
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.home .cards .cardItem:nth-child(2n){
+		margin-left: 15px;
+		margin-right: 15px;
+	}
+	.home .cards .cardItem .desc button{
+		max-width: 155px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+@media screen and (min-width: 1200px) {
+	.home{
+		padding-left: 0;
+		padding-right: 0;
+	}
 }
 </style>

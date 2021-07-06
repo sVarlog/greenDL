@@ -1,19 +1,21 @@
 <template>
-    <div class="button" :class="{active: Number(getTotalCount) > 0}" @click="setBasketModal({show: true})">
-        <div class="center">
-            <h2>Ваш заказ</h2>
-            <div class="row">
-                <span class="counter">{{getTotalCount}} шт</span>
-                <span class="price">{{getTotalSum}} {{$store.state.currency}}</span>
+    <div class="btnWrap">
+        <div class="button" :class="{active: Number(getTotalCount) > 0}" @click="setBasketModal({show: true})">
+            <div class="center">
+                <h2>Ваш заказ</h2>
+                <div class="row">
+                    <span class="counter">{{getTotalCount}} шт</span>
+                    <span class="price">{{getTotalSum}} {{$store.state.currency}}</span>
+                </div>
             </div>
-        </div>
-        <div class="rigth">
-            <div class="svgWrap">
-                <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M13.7119 5.4612L8.70418 0.453348C8.56123 0.310398 8.3707 0.231934 8.16755 0.231934C7.96418 0.231934 7.77377 0.310511 7.63082 0.453348L7.17615 0.908125C7.03331 1.05085 6.95462 1.24149 6.95462 1.44475C6.95462 1.6479 7.03331 1.84496 7.17615 1.98769L10.0976 4.91556H0.816027C0.39755 4.91556 0.0668945 5.24317 0.0668945 5.66176V6.3047C0.0668945 6.72329 0.39755 7.08393 0.816027 7.08393H10.1307L7.17626 10.0281C7.03343 10.1711 6.95474 10.3565 6.95474 10.5598C6.95474 10.7628 7.03343 10.951 7.17626 11.0938L7.63093 11.5472C7.77388 11.6901 7.96429 11.768 8.16767 11.768C8.37082 11.768 8.56134 11.6891 8.70429 11.5461L13.712 6.5384C13.8553 6.395 13.9341 6.20357 13.9336 6.00008C13.934 5.79592 13.8553 5.60438 13.7119 5.4612Z" fill="white"/>
-                </svg>
+            <div class="rigth">
+                <div class="svgWrap">
+                    <svg width="14" height="12" viewBox="0 0 14 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M13.7119 5.4612L8.70418 0.453348C8.56123 0.310398 8.3707 0.231934 8.16755 0.231934C7.96418 0.231934 7.77377 0.310511 7.63082 0.453348L7.17615 0.908125C7.03331 1.05085 6.95462 1.24149 6.95462 1.44475C6.95462 1.6479 7.03331 1.84496 7.17615 1.98769L10.0976 4.91556H0.816027C0.39755 4.91556 0.0668945 5.24317 0.0668945 5.66176V6.3047C0.0668945 6.72329 0.39755 7.08393 0.816027 7.08393H10.1307L7.17626 10.0281C7.03343 10.1711 6.95474 10.3565 6.95474 10.5598C6.95474 10.7628 7.03343 10.951 7.17626 11.0938L7.63093 11.5472C7.77388 11.6901 7.96429 11.768 8.16767 11.768C8.37082 11.768 8.56134 11.6891 8.70429 11.5461L13.712 6.5384C13.8553 6.395 13.9341 6.20357 13.9336 6.00008C13.934 5.79592 13.8553 5.60438 13.7119 5.4612Z" fill="white"/>
+                    </svg>
+                </div>
+                <span>далее</span>
             </div>
-            <span>далее</span>
         </div>
     </div>
 </template>
@@ -48,12 +50,17 @@ export default BasketBtn;
 </script>
 
 <style scoped>
-.button{
+.btnWrap{
     position: fixed;
     bottom: 37px;
     left: 15px;
     right: 15px;
-    width: calc(100% - 30px);   
+    width: calc(100% - 30px);
+    display: flex;
+    justify-content: center;
+}
+.button{
+    width: 100%;   
     height: 78px;
     background: #4BCE2A;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
@@ -66,6 +73,8 @@ export default BasketBtn;
     transition: .2s;
     z-index: -1;
     pointer-events: none;
+    max-width: 455px;
+    position: relative;
 }
 .button.active{
     opacity: 1;
