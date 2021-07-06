@@ -10,8 +10,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <title>GreenDL - микрозелень купить</title>
     <style>
+      *{
+        outline: none;
+      }
+      *{
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      *::-webkit-scrollbar {
+        display: none;
+      }
       body{
         background: #F9F9F9;
+        position: fixed;
+        overflow: hidden;
       }
       input[type=number]::-webkit-inner-spin-button, 
       input[type=number]::-webkit-outer-spin-button { 
@@ -26,13 +38,8 @@
       .plus, .minus{
         cursor: pointer;
       }
-      body.modalActive{
+      body.modalActive .home{
           overflow: hidden;
-        }
-      @media screen and (min-width: 700px) {
-        body.modalActive{
-          padding-right: 17px;
-        }
       }
     </style>
   </head>

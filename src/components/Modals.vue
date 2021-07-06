@@ -98,8 +98,8 @@ export default Modals;
 }
 .modal .wrap{
     background: #fff;
-    max-height: 90vh;
-    overflow-y: auto;
+    max-height: 80vh;
+    overflow-y: scroll;
     width: 100%;
     display: block;
     border-top-left-radius: 25px;

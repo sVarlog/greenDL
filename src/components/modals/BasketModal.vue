@@ -51,7 +51,7 @@
                     <input type="text" v-model="formData.entrance" placeholder="Подъезд">
                     <input type="text" v-model="formData.intercom" placeholder="Домофон">
                 </div>
-                <input type="text" v-model="formData.phone" placeholder="Телефон">
+                <input type="text" v-model="formData.phone" inputmode="numeric" placeholder="Телефон">
                 <textarea v-model="formData.comment" placeholder="Комментарий"></textarea>
             </div>
             <button class="pay" @click="makeOrder" :disabled="checkBtnShow">
@@ -120,8 +120,6 @@ const BasketModal = {
             return this.getBasket.chosedProducts.length === 0 
                     || this.formData.street === '' 
                     || this.formData.flat === '' 
-                    || this.formData.entrance === '' 
-                    || this.formData.intercom === '' 
                     || this.formData.phone === ''
         }
     },

@@ -50,9 +50,6 @@ export default BasketBtn;
 </script>
 
 <style scoped>
-body.modalActive .btnWrap{
-    width: calc(100% - 47px);
-}
 .btnWrap{
     position: fixed;
     bottom: 37px;

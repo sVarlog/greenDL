@@ -175,9 +175,4 @@ export default Header;
     margin-right: 17px;
     cursor: pointer;
 }
-@media screen and (min-width: 700px) {
-    body.modalActive .headerWrap{
-        right: 8px;
-    }
-}
 </style>
