@@ -1,6 +1,5 @@
 <template>
 	<div id="app">
-		<header-component></header-component>
 		<router-view/>
 		<basket-btn></basket-btn>
 		<modals></modals>
@@ -8,13 +7,11 @@
 </template>
 
 <script>
-import HeaderComponent from '@/components/Header';
 import BasketBtn from '@/components/BasketBtn';
 import Modals from '@/components/Modals';
 
 const App = {
 	components: {
-		HeaderComponent,
 		BasketBtn,
 		Modals
 	},

@@ -1,5 +1,6 @@
 <template>
     <div class="homeOut">
+		<header-component></header-component>
 		<div class="home" :class="{active: getBasket.chosedProducts.length > 0}">
 			<h1>Микрозелень купить</h1>
 			<ul class="cards">
@@ -34,6 +35,7 @@
 </template>
 
 <script>
+import HeaderComponent from '@/components/Header';
 import {mapMutations, mapGetters} from 'vuex';
 import {SET_BASKET_DATA} from '@/store/types.js';
 import {SET_CARD_DESC_MODAL} from '@/store/types.js';
@@ -157,6 +159,9 @@ const MainPage = {
 			}
 			this.$forceUpdate();
 		}
+	},
+	components: {
+		HeaderComponent
 	}
 }
 
@@ -168,7 +173,6 @@ export default MainPage;
 	position: fixed;
     bottom: 0;
     top: 0;
-	padding-top: 85px;
     overflow-y: scroll;
 	width: 100%;
 	left: 0;
@@ -176,7 +180,7 @@ export default MainPage;
 	max-height: 100%;
 }
 .home{
-	padding-top: 40px;
+	padding-top: 125px;
 	background: #F9F9F9;
 	padding-left: 23px;
 	padding-right: 23px;
