@@ -164,7 +164,8 @@ export default MainPage;
 .homeOut{
 	position: fixed;
     bottom: 0;
-    top: 85px;
+    top: 0;
+	padding-top: 85px;
     overflow-y: scroll;
 	width: 100%;
 	left: 0;
