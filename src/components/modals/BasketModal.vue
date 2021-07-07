@@ -45,13 +45,13 @@
             <span class="noData" v-else>Нет выбранных товаров</span>
             <div class="form">
                 <h2>Адрес доставки</h2>
-                <input type="text" v-model="formData.street" placeholder="Город, Улица">
+                <input type="text" v-model="formData.street" placeholder="Город, Улица *">
                 <div class="inputsRow">
-                    <input type="text" v-model="formData.flat" placeholder="Кв/офис">
+                    <input type="text" v-model="formData.flat" placeholder="Кв/офис *">
                     <input type="text" v-model="formData.entrance" placeholder="Подъезд">
                     <input type="text" v-model="formData.intercom" placeholder="Домофон">
                 </div>
-                <input type="text" v-model="formData.phone" inputmode="numeric" placeholder="Телефон">
+                <input type="text" v-model="formData.phone" inputmode="numeric" placeholder="Номер телефона *">
                 <textarea v-model="formData.comment" placeholder="Комментарий"></textarea>
             </div>
             <button class="pay" @click="makeOrder" :disabled="checkBtnShow">
@@ -210,6 +210,7 @@ export default BasketModal;
 .modal .header .delete{
     position: absolute;
     right: 0;
+    cursor: pointer;
 }
 .modal .header h2{
     font-family: Montserrat;
